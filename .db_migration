@@ -1,0 +1,180 @@
+-- Write down your all Database queries here
+
+
+CREATE TABLE `ecommerce`.`product_settings` ( `id` TINYINT(1) NOT NULL AUTO_INCREMENT , `per_page` TINYINT(5) NOT NULL , `max_product_limit` INT(5) NOT NULL , `max_desription_text_limit` INT(5) NOT NULL , `cron_url` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+-- 12-09-2022
+DELETE FROM `module_admin` WHERE `module_admin`.`id` = 25
+
+
+​-- 19-09-2022
+ALTER TABLE `products` ADD `rating` VARCHAR(4) NOT NULL DEFAULT '0' AFTER `predictive_search`;
+ALTER TABLE `product_rating` CHANGE `rating_rate` `rating_rate` VARCHAR(1) NOT NULL;
+
+-- 19-09-2022
+ALTER TABLE `master_order`  ADD `order_id` INT(11) NOT NULL  AFTER `product_id`;
+ALTER TABLE `master_order`  ADD `total_amt` INT(11) NOT NULL  AFTER `status`;
+
+-- 20-09-2022
+RENAME TABLE `ecommerce`.`user_screen_notifications` TO `myktdc`.`user_screen_notifications`; DROP DATABASE `ecommerce`;
+DROP TABLE `module_customer`;
+
+-- 21-09-2022
+DROP TABLE `myktdc`.`order`;
+RENAME TABLE `myktdc`.`master_order` TO `myktdc`.`orders`;
+RENAME TABLE `myktdc`.`master_order_setting` TO `myktdc`.`order_cancel_reasons`;
+ALTER TABLE `orders` ADD `seller_id` INT(11) NOT NULL AFTER `user_id`;
+
+CREATE TABLE `myktdc`.`users_address` ( `id` INT NOT NULL , `user_id` INT NOT NULL , `contact_person` INT NOT NULL , `contact_no` INT NOT NULL , `address` INT NOT NULL , `address_1` INT NOT NULL , `address_2` INT NOT NULL , `city_id` INT NOT NULL , `state_id` INT NOT NULL , `country_id` INT NOT NULL , `zipcode` INT NOT NULL , `is_default` INT NOT NULL , `created_at` INT NOT NULL )
+
+ALTER TABLE `users_address` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`id`), CHANGE `contact_person` `contact_person` TEXT NOT NULL, CHANGE `contact_no` `contact_no` INT(20) NOT NULL, CHANGE `address` `address` VARCHAR(50) NOT NULL, CHANGE `address_1` `address_1` VARCHAR(50) NOT NULL, CHANGE `address_2` `address_2` VARCHAR(50) NOT NULL, CHANGE `is_default` `is_default` INT(1) NOT NULL DEFAULT '0', CHANGE `created_at` `created_at` DATETIME NOT NULL;
+
+-- 22-09-2022
+ALTER TABLE `users_profile` DROP `addres`, DROP `city_id`, DROP `state_id`;
+ALTER TABLE `users_profile` ADD `address_id` INT(11) NOT NULL AFTER `user_id`;
+
+-- 26-09-2022
+UPDATE `module_seller` SET `controller` = 'review' WHERE `module_seller`.`id` = 22;
+
+--28-09-2022
+ALTER TABLE `orders` CHANGE `user_id` `customer_user_id` INT(11) NOT NULL;
+ALTER TABLE `orders` CHANGE `seller_id` `seller_user_id` INT(11) NOT NULL;
+CREATE TABLE `myktdc`.`sellers_orders` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `product_id` INT(11) NOT NULL , `order_id` INT(11) NOT NULL , `seller_user_id` INT(11) NOT NULL,PRIMARY KEY (`id`));
+
+-- 28-9-2022
+
+ALTER TABLE `product_rating` ADD `created_at` DATE NULL AFTER `title`;
+ALTER TABLE `orders` DROP `product_id`;
+RENAME TABLE `myktdc`.`sellers_orders` TO `myktdc`.`order_products`;
+ALTER TABLE `order_products` DROP `seller_user_id`;
+ALTER TABLE `order_products` ADD `qty` INT NOT NULL AFTER `product_id`;
+
+-- 06-10-2022
+CREATE TABLE `myktdc`.`contact_us` ( `id` INT NOT NULL );
+ALTER TABLE `contact_us` ADD `first_name` TEXT NOT NULL AFTER `id`, ADD `last_name` TEXT NOT NULL AFTER `first_name`, ADD `email` VARCHAR(255) NOT NULL AFTER `last_name`, ADD `phone` BIGINT(20) NOT NULL AFTER `email`, ADD `subject` TEXT NOT NULL AFTER `phone`, ADD `message` TEXT NOT NULL AFTER `subject`, ADD `created_at` DATETIME NULL AFTER `message`, ADD `updated_at` DATETIME NULL AFTER `created_at`, ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
+ALTER TABLE `contact_us` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`id`);
+
+--Create new colum 
+ALTER TABLE `products` ADD `slug` VARCHAR(255) NOT NULL AFTER `rating`;
+
+--Update field name 
+ALTER TABLE `product_images` CHANGE `default_img` `is_default` TINYINT(1) NOT NULL DEFAULT '0';
+
+
+-- update product crud related in product tables
+ALTER TABLE `products` DROP `unit_id`;
+ALTER TABLE `products` CHANGE `predictive_search` `predictive_search` TEXT;
+ALTER TABLE `products` ADD `qr_code_img` VARCHAR(255) NOT NULL AFTER `slug`;
+ALTER TABLE `product_images` DROP `qr_code_img`;
+ALTER TABLE `product_images` ADD `pid` INT(11) NOT NULL DEFAULT '0' AFTER `id`;
+
+--Create newslater subscription table 11-10-2022
+CREATE TABLE `myktdc`.`newslater_subscriptions` ( `id` INT NOT NULL );
+ALTER TABLE `newslater_subscriptions` ADD `email` VARCHAR(255) NOT NULL AFTER `id`, ADD `created_at` DATETIME NULL AFTER `email`, ADD `updated_at` DATETIME NULL AFTER `created_at`, ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
+ALTER TABLE `newslater_subscriptions` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`id`);
+
+--Create testimonial table 11-10-2022
+CREATE TABLE `myktdc`.`testimonials` ( `id` INT NOT NULL );
+ALTER TABLE `testimonials` ADD `name` TEXT NOT NULL AFTER `id`, ADD `city` TEXT NOT NULL AFTER `name`, ADD `photo` TEXT NOT NULL AFTER `city`, ADD `message` TEXT NOT NULL AFTER `photo`, ADD `created_at` DATETIME NULL AFTER `message`, ADD `updated_at` DATETIME NULL AFTER `created_at`, ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
+ALTER TABLE `testimonials` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`id`);
+
+--Add some fake data in testimonials
+INSERT INTO `testimonials` (`id`, `name`, `city`, `photo`, `message`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'Seema Devi', 'Jaipur', 'http://localhost/myktdc/public/images/client-img1.jpg', 'I just wanted to share a quick note and let you know that you guys do a really good job. I’m glad I decided to start selling with you. It’s really great how easy your websites are to manage products and sell. I never have any problem at all.\r\n\r\nThis site is so much faster and easier to work. \r\n\r\nThanks, guys!', NULL, NULL, NULL), (NULL, 'Suresh Kumar', 'Jhunjhunu', 'http://localhost/myktdc/public/images/client-img2.jpg', 'I just wanted to share a quick note and let you know that you guys do a really good job. I’m glad I decided to start selling with you. It’s really great how easy your websites are to manage products and sell. I never have any problem at all.\r\n\r\nThis site is so much faster and easier to work. \r\n\r\nThank you!', NULL, NULL, NULL);
+
+--11/10/2022
+ALTER TABLE `order_products` ADD `status` INT(2) NOT NULL DEFAULT '0' AFTER `qty`;
+ALTER TABLE `order_products` ADD `invoice_id` BIGINT(11) NOT NULL AFTER `status`;
+DELETE FROM `module_seller` WHERE `module_seller`.`id` = 14;
+UPDATE `module_seller` SET `sort_order` = '8' WHERE `module_seller`.`id` = 15;
+UPDATE `module_seller` SET `sort_order` = '7' WHERE `module_seller`.`id` = 21;
+
+-- Remove some product menu for admin 
+DELETE FROM `module_admin` WHERE `module_admin`.`id` = 19;
+DELETE FROM `module_admin` WHERE `module_admin`.`id` = 20;
+DELETE FROM `module_admin` WHERE `module_admin`.`id` = 23;
+
+--Update menu name
+UPDATE `module_admin` SET `title` = 'products' WHERE `module_admin`.`id` = 21;
+--12/10/2022--
+CREATE TABLE `myktdc`.`faqs` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `question` TEXT NOT NULL , `answer` TEXT NOT NULL , `created_at` DATETIME NULL , PRIMARY KEY (`id`))
+INSERT INTO `faqs` (`id`, `question`, `answer`, `created_at`) VALUES (NULL, 'Is it necessary to have an account to shop on MYKTDC?\r\n\r\n', 'Yes, it\'s necessary to log into your MYKTDC account to shop. Shopping as a logged-in user is fast & convenient and also provides extra security.\r\n\r\nYou\'ll have access to a personalised shopping experience including recommendations and quicker check-out.', '2022-10-12 12:18:13'), (NULL, 'Do sellers on MYKTDC ship internationally?\r\n\r\n', 'Currently, sellers on MYKTDC only ship within India.\r\n\r\n', NULL);
+UPDATE `faqs` SET `created_at` = '2022-10-12 12:20:59' WHERE `faqs`.`id` = 4;
+INSERT INTO `faqs` (`id`, `question`, `answer`, `created_at`) VALUES (NULL, 'What does \'Out of Stock\' mean?', 'An item is marked as \'Out of stock\' when it is not available with any sellers at the moment; you won\'t be able to buy it now. Use \'Notify Me\' feature to know once it\'s available with sellers for purchase.', '2022-10-12 12:18:13'), (NULL, 'What should I do if my order is approved but hasn\'t been shipped yet?\r\n\r\n', 'Sellers usually ship orders 1-2 business days before the delivery date so that they reach you on time. In case your order hasn\'t been shipped within this time please contact our Customer Support so that we can look into it.\r\n\r\n', '2022-10-12 12:14:24');
+
+ALTER TABLE `products` ADD `brand_id` INT(11) NOT NULL AFTER `category_id`;
+ALTER TABLE `products`  ADD `net_weight` INT(11) NOT NULL  AFTER `gst_rate`,  ADD `quantity` INT(11) NOT NULL  AFTER `net_weight`;
+ALTER TABLE `products` ADD `country_of_origin` TEXT NOT NULL AFTER `user_id`;
+
+
+--Added category images 12-10-2022
+ALTER TABLE `categories` ADD `image` TEXT NOT NULL AFTER `pid`;
+
+--Create new table for category label mapping 12-10-2022
+CREATE TABLE `myktdc`.`product_label_category` (`id` INT(11) NOT NULL AUTO_INCREMENT , `label_id` INT(5) NOT NULL , `category_id` INT(3) NOT NULL , PRIMARY KEY (`id`)) 
+
+--Update the foreign key in table  12-10-2022
+ALTER TABLE `product_value` CHANGE `label_id` `label_category_id` INT(11) NOT NULL COMMENT 'Foreign key from product_label_category table';
+
+--Delete the category id from table  12-10-2022
+ALTER TABLE `product_value` DROP `product_cat_id`;
+
+--Add new colum in product for status 13-10-2022
+ALTER TABLE `products` ADD `status` TINYINT(1) NOT NULL DEFAULT '1' COMMENT '1: Draft\r\n2: Pending\r\n3: Published\r\n4: Rejected' AFTER `id`;
+
+--Module Seller table updates 14-10-2022
+DELETE FROM `module_seller` WHERE `module_seller`.`id` = 25;
+UPDATE `module_seller` SET `controller` = 'managerefund' WHERE `module_seller`.`id` = 21;
+
+-- add new column of sale_price in products table
+ALTER TABLE `products` ADD `sale_price` INT(15) NOT NULL AFTER `product_price`;
+
+-- update orders tables
+ALTER TABLE `orders` DROP `seller_user_id`, DROP `cancel_reason_id`;
+ALTER TABLE `orders` CHANGE `order_id` `transaction_id` INT(11) NOT NULL;
+ALTER TABLE `orders` CHANGE `transaction_id` `transaction_id` VARCHAR(255) NOT NULL;
+ALTER TABLE `order_products` ADD `product_amt` INT(15) NULL AFTER `qty`;
+ALTER TABLE `order_products` ADD `seller_id` INT(11) NOT NULL AFTER `id`;
+ALTER TABLE `order_products` ADD `purchase_id` VARCHAR(255) NOT NULL AFTER `invoice_id`;
+
+
+--create order payment
+CREATE TABLE `order_payment` (
+  `id` int(11) NOT NULL,
+  `transaction_id` varchar(255) NOT NULL,
+  `payment_id` varchar(255) NOT NULL,
+  `paid_amt` varchar(50) NOT NULL,
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ALTER TABLE `order_payment` ADD PRIMARY KEY (`id`);
+
+--update order productus table---
+ALTER TABLE `order_products` CHANGE `seller_id` `seller_user_id` INT(11) NOT NULL;
+-- change name fo purchase_id field
+ALTER TABLE `order_products` CHANGE `purchase_id` `order_unique_id` varchar(255) NOT NULL;
+ALTER TABLE `orders` CHANGE `status` `payment_status` TINYINT(1) NOT NULL;
+
+--17-10-2022--
+ALTER TABLE `user_screen_notifications` ADD `notification_fetch_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `date`;
+
+--19-10-2022 renamed field
+ALTER TABLE `products` CHANGE `product_price` `mrp` FLOAT NOT NULL;
+
+--27-10-2022
+ALTER TABLE `order_products` CHANGE `order_unique_id` `product_order_id` varchar(255) NOT NULL;
+ALTER TABLE `order_products` CHANGE `order_id` `fk_order_id` int(11) NOT NULL;
+ALTER TABLE `orders` CHANGE `transaction_id` `order_id` varchar(255) NOT NULL;
+ALTER TABLE `order_payment` CHANGE `transaction_id` `fk_order_id` int(11) NOT NULL;
+
+ALTER TABLE `order_payment` CHANGE `fk_order_id` `fk_order_id` INT(11) NOT NULL COMMENT 'foreign key in orders table primary key';
+ALTER TABLE `order_products` CHANGE `fk_order_id` `fk_order_id` INT(11) NOT NULL COMMENT 'foreign key in orders table primary key';
+
+ALTER TABLE `order_products` DROP `invoice_id`;
+
+ALTER TABLE `order_payment` ADD `payment_type` VARCHAR(100) NOT NULL AFTER `payment_id`;
+
+--29-10-2022
+ALTER TABLE `order_products` ADD `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `product_order_id`;
+
+--30-10-2022
+ALTER TABLE `order_products` ADD `shipping_charges` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `product_amt`;

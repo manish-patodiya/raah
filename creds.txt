@@ -1,0 +1,8 @@
+Admin || Seller || Customer
+phone: 9602065385
+password: Manish@1234
+
+URL
+https://myktdc//admin
+https://myktdc//seller
+https://myktdc//customer
