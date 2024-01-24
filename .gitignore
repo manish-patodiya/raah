@@ -1,7 +1,4 @@
 vendor/*
-public/frontend/*
-public/images/*
 public/theme1/*
 public/scss/*
-public/test_images/*
 tests/*
