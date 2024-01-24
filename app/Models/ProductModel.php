@@ -294,7 +294,8 @@ class productModel extends Model
         $this->builder->select('products.*,pi.product_image')
             ->join('product_images pi', 'pi.product_id=products.id', 'left')
             ->where("(is_default = 1 OR is_default is NULL) AND (type = '200X200' OR type is NULL)")
-            ->where('products.deleted_at', null);
+            ->where('products.deleted_at', null)
+            ->where('status=3');
 
         if (isset($filter['page']) && $filter['page']) {
             $per_page = $this->get_product_settings()->per_page_web;
@@ -379,7 +380,8 @@ class productModel extends Model
             ->join('product_label pl', 'pm.label_id = pl.id')
             ->join('product_value pv', 'pm.value_id = pv.id')
             ->groupBy('pm.value_id')
-            ->where('pm.value_id > 0');
+            ->where('pm.value_id > 0')
+            ->where('status=3');;
 
         if (isset($filter['cat']) && $filter['cat']) {
             $this->builder->where('category_id', $filter['cat']);
@@ -399,7 +401,7 @@ class productModel extends Model
 
     public function getExtraFilters($filter)
     {
-        $this->builder->select('MAX(sale_price) as max_price, MIN(sale_price) as min_price,MIN(discount) as min_dis,MAX(discount) as max_dis,MIN(rating) as min_rating,MAX(rating) max_rating')->where('deleted_at', null);
+        $this->builder->select('MAX(sale_price) as max_price, MIN(sale_price) as min_price,MIN(discount) as min_dis,MAX(discount) as max_dis,MIN(rating) as min_rating,MAX(rating) max_rating')->where('deleted_at', null)->where('status=3');;
 
         if (isset($filter['cat']) && $filter['cat']) {
             $this->builder->where('category_id', $filter['cat']);
@@ -500,7 +502,7 @@ class productModel extends Model
             }
         }
 
-        return $this->builder->select('products.id')->where('deleted_at', null)->countAllResults();
+        return $this->builder->select('products.id')->where('deleted_at', null)->where('status=3')->countAllResults();
         // prd($this->db->getLastQuery()->getQuery());
     }
 

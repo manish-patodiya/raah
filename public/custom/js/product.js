@@ -650,6 +650,7 @@ $(function() {
         }
         $.ajax(product);
     })
+    
     $(document).on("click", ".image_id", function() {
         let image_id = $(".image_id").attr('img_id');
         let product_id = $("#product_id").val();

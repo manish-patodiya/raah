@@ -1,10 +1,4 @@
 vendor/*
-front-end-theme/*
-writable/*
-app/Config/App.php
-myktdc.zip
-blog/*
-app/ThirdParty/phpqrcode/*
 public/assets/*
 public/assets/icons/flag-icon-css/flags/4x3/mh.svg
 public/favicon/*
