@@ -1,7 +1,4 @@
 vendor/*
-public/assets/*
-public/assets/icons/flag-icon-css/flags/4x3/mh.svg
-public/favicon/*
 public/frontend/*
 public/images/*
 public/theme1/*
